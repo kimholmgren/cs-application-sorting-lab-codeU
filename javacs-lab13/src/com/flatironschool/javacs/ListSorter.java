@@ -63,8 +63,45 @@ public class ListSorter<T> {
 	 * @return
 	 */
 	public List<T> mergeSort(List<T> list, Comparator<T> comparator) {
-        // FILL THIS IN!
-        return null;
+        // account for base case - if given list with one element return it
+			//split the list in half
+		int length = list.size();
+		if(length<=1) {
+			return list;
+		}
+		LinkedList<T> a = new LinkedList<T>(list.subList(0, length/2));
+		LinkedList<T> b = new LinkedList<T>(list.subList(length/2, length));
+		List<T> firsthalf = mergeSort(a, comparator);
+		List<T> secondhalf = mergeSort(b, comparator);
+
+			//sort the halves using COllections.sort or Insertion sort
+
+			//merge the sorted half into a complete sorted list
+
+		//modify solution so it makes 2 recursive calls to each half of array
+
+
+     return merge(firsthalf, secondhalf, comparator);
+	}
+
+
+
+	public List<T> merge(List<T> list, List<T> secondlist, Comparator<T> comparator) {
+		int size = list.size() + secondlist.size();
+		List<T> ret = new ArrayList<T>();
+		for(int i=0; i<size; i++) {
+			if(list.size()==0) {
+				ret.add(secondlist.remove(0));
+			} else if(secondlist.size()==0) {
+				ret.add(list.remove(0));
+			} else if(comparator.compare(list.get(0), secondlist.get(0))<0) {
+				ret.add(list.remove(0));
+			} else {
+				ret.add(secondlist.remove(0));
+			}
+		}
+		return ret;
+
 	}
 
 	/**
@@ -75,7 +112,13 @@ public class ListSorter<T> {
 	 * @return
 	 */
 	public void heapSort(List<T> list, Comparator<T> comparator) {
-        // FILL THIS IN!
+       PriorityQueue<T> queue = new PriorityQueue<T>(list.size(), comparator);
+       queue.addAll(list);
+       list.clear();
+       while(!queue.isEmpty()) {
+       	list.add(queue.poll());
+       }
+
 	}
 
 	
@@ -89,8 +132,25 @@ public class ListSorter<T> {
 	 * @return
 	 */
 	public List<T> topK(int k, List<T> list, Comparator<T> comparator) {
-        // FILL THIS IN!
-        return null;
+        PriorityQueue<T> queue = new PriorityQueue<T>(list.size(), comparator);
+        List<T> ret = new ArrayList<T>();
+        for(T curr: list) {
+        	if(queue.size()<k) {
+        		queue.offer(curr);
+        	} else {
+        		T smallest = queue.peek();
+        		int cmp = comparator.compare(smallest, curr);
+        		if(cmp<0) {
+        			queue.poll();
+        			queue.offer(curr);
+        		}
+        	}
+
+        }
+        for(int i=0; i<k; i++) {
+        	ret.add(queue.poll());
+        }
+        return ret;
 	}
 
 	
